@@ -4,11 +4,12 @@ import br.com.poupyg.fintechNovo.model.Investimento;
 import br.com.poupyg.fintechNovo.service.InvestimentoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/investimentos")
+@RequestMapping("/api/investimento")
 @CrossOrigin(origins = "*")
 public class InvestimentoController {
 
@@ -16,7 +17,13 @@ public class InvestimentoController {
     private InvestimentoService service;
 
     @GetMapping
-    public List<Investimento> listar() { return service.buscarTodos(); }
+    public ResponseEntity<List<Investimento>> listar(@RequestParam(required = false) Long usuarioId) {
+        if (usuarioId != null) {
+            List<Investimento> investimentos = service.buscarPorUsuario(usuarioId);
+            return ResponseEntity.ok(investimentos);
+        }
+        return ResponseEntity.ok(service.buscarTodos());
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

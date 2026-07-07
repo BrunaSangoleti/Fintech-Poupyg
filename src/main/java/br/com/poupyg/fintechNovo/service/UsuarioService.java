@@ -15,6 +15,16 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    public Usuario autenticar(String email, String senha) {
+
+
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmailAndSenha(email, senha);
+
+
+        // Se encontrar, devolve o usuário. Se não encontrar (senha ou e-mail errados), devolve null.
+        return usuarioOpt.orElse(null);
+    }
+
     public Usuario buscarUsuario(Long id) {
 
         Optional<Usuario> usuario = usuarioRepository.findById(id);

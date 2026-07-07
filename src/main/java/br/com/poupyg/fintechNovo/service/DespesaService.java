@@ -29,6 +29,9 @@ public class DespesaService {
         return despesaRepository.findAll();
     }
 
+    public List<Despesa> buscarPorUsuario(Long usuarioId) {
+        return despesaRepository.findByUsuarioCodigo(usuarioId);
+    }
     public Despesa salvar(Despesa despesas) {
         return despesaRepository.save(despesas);
     }

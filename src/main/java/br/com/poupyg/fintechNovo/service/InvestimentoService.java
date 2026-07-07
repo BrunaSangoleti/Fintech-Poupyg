@@ -30,6 +30,9 @@ public class InvestimentoService {
         return investimentoRepository.findAll();
     }
 
+    public List<Investimento> buscarPorUsuario(Long usuarioId) {
+        return investimentoRepository.findByUsuarioCodigo(usuarioId);
+    }
     public Investimento salvar(Investimento investimento) {
         return investimentoRepository.save(investimento);
     }
@@ -44,14 +47,19 @@ public class InvestimentoService {
         }
     }
 
-    public Investimento atualizar(Long id, Investimento investimento) {
+    public Investimento atualizar(Long id, Investimento investimentoAtualizado) {
         Optional<Investimento> investimentoAtual = investimentoRepository.findById(id);
 
         if(investimentoAtual.isPresent()) {
+            Investimento investimentoExistente = investimentoAtual.get();
 
-            return investimentoRepository.save(investimento);
+
+            investimentoExistente.setDescricao(investimentoAtualizado.getDescricao());
+            investimentoExistente.setValor(investimentoAtualizado.getValor());
+
+            return investimentoRepository.save(investimentoExistente);
         } else {
-            throw new RecursoNaoEncontradoException("Não foi possível atualizar. Investimento com o ID " + id + " não encontrada.");
+            throw new RecursoNaoEncontradoException("Não foi possível atualizar. Investimento com ID " + id + " não encontrado.");
         }
     }
 }

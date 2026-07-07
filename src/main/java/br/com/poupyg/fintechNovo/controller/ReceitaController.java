@@ -4,11 +4,12 @@ import br.com.poupyg.fintechNovo.model.Receita;
 import br.com.poupyg.fintechNovo.service.ReceitaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/receitas")
+@RequestMapping("/api/receita")
 @CrossOrigin(origins = "*")
 public class ReceitaController {
 
@@ -16,7 +17,16 @@ public class ReceitaController {
     private ReceitaService service;
 
     @GetMapping
-    public List<Receita> listar() { return service.buscarTodos(); }
+    public ResponseEntity<List<Receita>> listar(@RequestParam(required = false) Long usuarioId) {
+
+        if (usuarioId != null) {
+            List<Receita> receitas = service.buscarPorUsuario(usuarioId);
+            return ResponseEntity.ok(receitas);
+        }
+
+
+        return ResponseEntity.ok(service.buscarTodos());
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

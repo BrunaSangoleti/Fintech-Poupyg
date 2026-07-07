@@ -10,6 +10,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ReceitaService {
 
@@ -17,7 +22,6 @@ public class ReceitaService {
     private ReceitaRepository receitaRepository;
 
     public Receita buscarReceita(Long id) {
-
         Optional<Receita> receita = receitaRepository.findById(id);
 
         if(receita.isPresent()) {
@@ -27,8 +31,15 @@ public class ReceitaService {
         }
     }
 
+
     public List<Receita> buscarTodos() {
         return receitaRepository.findAll();
+    }
+
+
+    public List<Receita> buscarPorUsuario(Long usuarioId) {
+
+        return receitaRepository.findByUsuarioCodigo(usuarioId);
     }
 
     public Receita salvar(Receita receita) {
@@ -45,12 +56,17 @@ public class ReceitaService {
         }
     }
 
-    public Receita atualizar(Long id, Receita receita) {
+    public Receita atualizar(Long id, Receita receitaAtualizada) {
         Optional<Receita> receitaAtual = receitaRepository.findById(id);
 
         if(receitaAtual.isPresent()) {
+            Receita receitaExistente = receitaAtual.get();
 
-            return receitaRepository.save(receita);
+
+            receitaExistente.setDescricao(receitaAtualizada.getDescricao());
+            receitaExistente.setValor(receitaAtualizada.getValor());
+
+            return receitaRepository.save(receitaExistente);
         } else {
             throw new RecursoNaoEncontradoException("Não foi possível atualizar. Receita com o ID " + id + " não encontrada.");
         }
